@@ -3,255 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claude 제품 구조 정리 (2026)</title>
+    <title>Claude 제품 구조 & 설정 가이드 (2026-03-11)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700&display=swap');
-        body { font-family: 'Pretendard', sans-serif; background-color: #f9f7f2; }
-        .card { transition: all 0.3s ease; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-        .tab-active { border-bottom: 3px solid #d97706; color: #d97706; }
-        .path-box { background: #1e1e1e; color: #d4d4d4; font-family: 'Courier New', monospace; }
-        .status-badge { padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
-        .status-ok { background: #dcfce7; color: #166534; }
-        .status-no { background: #fee2e2; color: #991b1b; }
+        body { font-family: 'Pretendard', sans-serif; background-color: #f1f5f9; color: #0f172a; }
+        .tab-active { background-color: #ffffff; border-bottom: 4px solid #f59e0b; color: #f59e0b; }
+        .section-card { background: white; border-radius: 1.5rem; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .terminal-code { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.75rem; font-family: 'Fira Code', monospace; font-size: 0.85rem; }
+        .badge { padding: 0.25rem 0.6rem; border-radius: 0.375rem; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .share-status { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.9rem; }
     </style>
 </head>
 <body class="p-4 md:p-8">
-    <div class="max-w-5xl mx-auto">
+    <div class="max-w-6xl mx-auto">
         <!-- Header -->
-        <header class="mb-10 text-center">
-            <h1 class="text-3xl md:text-4xl font-bold text-stone-800 mb-2">Claude 제품 구조 가이드</h1>
-            <p class="text-stone-500">최종 수정일: 2026-03-10 | Anthropic Ecosystem 분석</p>
+        <header class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-black tracking-tight text-slate-900">Claude 제품 구조 정리 <span class="text-amber-500">2026</span></h1>
+                <p class="text-slate-500 mt-2 font-medium">작성: 2026-03-01 | <span class="text-slate-900 underline decoration-amber-500 decoration-2">최종 수정: 2026-03-11</span></p>
+            </div>
+            <div class="flex gap-2">
+                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold border border-blue-200">CLI & VS Code 공유</span>
+                <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold border border-red-200">Desktop 앱 별개</span>
+            </div>
         </header>
 
-        <!-- Main Structure Diagram -->
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-stone-200 mb-8">
-            <h2 class="text-xl font-bold mb-6 flex items-center">
-                <span class="w-2 h-6 bg-amber-600 mr-3 rounded-full"></span>
-                1. 전체 서비스 아키텍처
+        <!-- 1. 전체 구조 아키텍처 -->
+        <section class="section-card p-6 mb-8">
+            <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                <span class="bg-slate-900 text-white w-6 h-6 rounded flex items-center justify-center text-sm">1</span>
+                전체 서비스 아키텍처
             </h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Web -->
-                <div class="border-2 border-stone-100 rounded-xl p-4 bg-stone-50 text-center">
-                    <div class="font-bold text-lg mb-2 text-stone-700">Claude.ai 웹</div>
-                    <div class="text-sm text-stone-500 mb-4">브라우저 기반 서비스</div>
-                    <div class="bg-white p-2 rounded border border-stone-200 text-xs font-semibold">순수 클라우드</div>
+                <div class="border-2 border-slate-100 rounded-2xl p-5 bg-slate-50">
+                    <div class="font-bold text-lg mb-1">Claude.ai 웹</div>
+                    <p class="text-xs text-slate-500 mb-4">브라우저 접속 (설치 불필요)</p>
+                    <div class="space-y-2">
+                        <div class="bg-white p-2 rounded border text-xs shadow-sm">독립 서비스 / 서버 설정</div>
+                    </div>
                 </div>
                 <!-- Desktop -->
-                <div class="border-2 border-amber-100 rounded-xl p-4 bg-amber-50 text-center">
+                <div class="border-2 border-amber-100 rounded-2xl p-5 bg-amber-50/50">
                     <div class="font-bold text-lg mb-1 text-amber-900">Claude 데스크탑 앱</div>
-                    <div class="text-xs text-amber-700 mb-3">(Electron 기반)</div>
-                    <div class="flex gap-2 justify-center">
-                        <div class="bg-white px-2 py-1 rounded text-[10px] border border-amber-200">채팅</div>
-                        <div class="bg-white px-2 py-1 rounded text-[10px] border border-amber-200">Cowork</div>
-                        <div class="bg-white px-2 py-1 rounded text-[10px] border border-amber-200 font-bold">Code 모드</div>
+                    <p class="text-xs text-amber-700 mb-4">Electron 기반 설치형</p>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="bg-white p-2 rounded border border-amber-200 text-[10px] text-center font-bold">채팅</div>
+                        <div class="bg-white p-2 rounded border border-amber-200 text-[10px] text-center font-bold">Cowork</div>
+                        <div class="bg-white p-2 rounded border border-amber-500 text-[10px] text-center font-bold bg-amber-50">Code 모드</div>
                     </div>
                 </div>
                 <!-- Claude Code -->
-                <div class="border-2 border-blue-100 rounded-xl p-4 bg-blue-50 text-center">
-                    <div class="font-bold text-lg mb-2 text-blue-900">Claude Code</div>
-                    <div class="text-sm text-blue-700 mb-3">엔지니어링 특화</div>
-                    <div class="flex gap-2 justify-center">
-                        <div class="bg-white px-2 py-1 rounded text-[10px] border border-blue-200">CLI (터미널)</div>
-                        <div class="bg-white px-2 py-1 rounded text-[10px] border border-blue-200">VS Code 확장</div>
+                <div class="border-2 border-blue-100 rounded-2xl p-5 bg-blue-50/50">
+                    <div class="font-bold text-lg mb-1 text-blue-900">Claude Code</div>
+                    <p class="text-xs text-blue-700 mb-4">개발자 전용 도구 세트</p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="bg-white p-2 rounded border border-blue-300 text-[10px] text-center font-bold">CLI (터미널)</div>
+                        <div class="bg-white p-2 rounded border border-blue-300 text-[10px] text-center font-bold">VS Code 확장</div>
                     </div>
-                    <div class="mt-2 text-[10px] text-blue-600 font-bold">← 설정 파일 완벽 공유 →</div>
+                    <div class="mt-3 text-center text-[10px] font-bold text-blue-600 bg-blue-100/50 py-1 rounded">~/.claude.json 설정 공유</div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Details Tab Section -->
-        <div class="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden mb-8">
-            <div class="flex border-b border-stone-100 bg-stone-50 overflow-x-auto">
-                <button onclick="showTab('comparison')" id="btn-comparison" class="px-6 py-4 text-sm font-bold whitespace-nowrap tab-active">핵심 비교</button>
-                <button onclick="showTab('storage')" id="btn-storage" class="px-6 py-4 text-sm font-bold whitespace-nowrap text-stone-500">데이터 & 경로</button>
-                <button onclick="showTab('mcp')" id="btn-mcp" class="px-6 py-4 text-sm font-bold whitespace-nowrap text-stone-500">MCP 설정</button>
-                <button onclick="showTab('sharing')" id="btn-sharing" class="px-6 py-4 text-sm font-bold whitespace-nowrap text-stone-500">공유 여부</button>
-            </div>
-
-            <!-- Tab: Comparison -->
-            <div id="tab-comparison" class="p-6">
+        <!-- 2. 핵심 차이 및 MCP 경로 (핵심 내용) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <!-- 제품별 차이 테이블 -->
+            <section class="section-card p-6 lg:col-span-2">
+                <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                    <span class="bg-slate-900 text-white w-6 h-6 rounded flex items-center justify-center text-sm">2</span>
+                    제품/모드별 상세 차이
+                </h2>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-left">
-                        <thead class="bg-stone-50 text-stone-600">
-                            <tr>
-                                <th class="p-3 border-b">구분</th>
-                                <th class="p-3 border-b">Claude.ai 웹</th>
-                                <th class="p-3 border-b">Cowork 모드</th>
-                                <th class="p-3 border-b">Claude Code (CLI/Ext)</th>
+                    <table class="w-full text-xs text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50">
+                                <th class="p-3 border">항목</th>
+                                <th class="p-3 border">웹</th>
+                                <th class="p-3 border">데스크탑 Cowork</th>
+                                <th class="p-3 border">데스크탑 Code</th>
+                                <th class="p-3 border text-blue-600">Claude Code (CLI)</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="border-b">
-                                <td class="p-3 font-semibold bg-stone-50">성격</td>
-                                <td class="p-3">일반 웹 채팅</td>
-                                <td class="p-3">로컬 에이전트</td>
-                                <td class="p-3 font-bold text-blue-600">개발 도우미</td>
-                            </tr>
-                            <tr class="border-b">
-                                <td class="p-3 font-semibold bg-stone-50">MCP 지원</td>
-                                <td class="p-3 text-xs">✅ 원격 HTTP 전용</td>
-                                <td class="p-3">✅ 로컬/stdio 지원</td>
-                                <td class="p-3 font-bold">✅ 강력 지원</td>
-                            </tr>
-                            <tr class="border-b">
-                                <td class="p-3 font-semibold bg-stone-50">로컬 파일</td>
-                                <td class="p-3 text-red-400">❌ 접근 불가</td>
-                                <td class="p-3">✅ 직접 접근</td>
-                                <td class="p-3">✅ 직접 접근</td>
+                            <tr>
+                                <td class="p-3 border font-bold bg-slate-50">성격</td>
+                                <td class="p-3 border text-slate-500">브라우저 채팅</td>
+                                <td class="p-3 border">로컬 에이전트</td>
+                                <td class="p-3 border">개발 도우미</td>
+                                <td class="p-3 border font-bold">개발 도우미</td>
                             </tr>
                             <tr>
-                                <td class="p-3 font-semibold bg-stone-50">설정 저장</td>
-                                <td class="p-3">Anthropic 서버</td>
-                                <td class="p-3 text-xs">AppData\Roaming\Claude</td>
-                                <td class="p-3 text-xs font-mono font-bold text-amber-700">~\.claude.json</td>
+                                <td class="p-3 border font-bold bg-slate-50">MCP</td>
+                                <td class="p-3 border text-amber-600 font-medium">원격 HTTP만</td>
+                                <td class="p-3 border">✅ 지원</td>
+                                <td class="p-3 border">✅ 지원</td>
+                                <td class="p-3 border">✅ 지원</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 border font-bold bg-slate-50">로컬 파일</td>
+                                <td class="p-3 border text-red-400">❌ 불가</td>
+                                <td class="p-3 border text-green-600 font-bold">✅ 가능</td>
+                                <td class="p-3 border text-green-600 font-bold">✅ 가능</td>
+                                <td class="p-3 border text-green-600 font-bold">✅ 가능</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 border font-bold bg-slate-50">MCP 설정</td>
+                                <td class="p-3 border">서버 (UI)</td>
+                                <td colspan="2" class="p-3 border text-center font-mono text-amber-700 bg-amber-50">claude_desktop_config.json</td>
+                                <td class="p-3 border font-mono text-blue-700 bg-blue-50">~/.claude.json</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </section>
 
-            <!-- Tab: Storage -->
-            <div id="tab-storage" class="p-6 hidden">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- MCP 경로 완전 분리 가이드 -->
+            <section class="section-card p-6 bg-slate-900 text-white border-none">
+                <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                    <span class="bg-amber-500 text-white w-6 h-6 rounded flex items-center justify-center text-sm">3</span>
+                    MCP 경로 완전 분리
+                </h2>
+                <div class="space-y-6">
                     <div>
-                        <h3 class="font-bold text-amber-700 mb-3 flex items-center">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
-                            Claude Desktop (Cowork)
-                        </h3>
-                        <div class="path-box p-3 rounded-lg text-xs leading-relaxed">
-                            %APPDATA%\Claude\<br>
-                            ├── <span class="text-amber-400">claude_desktop_config.json</span> (MCP)<br>
-                            ├── local-agent-mode-sessions\ (세션)<br>
-                            └── logs\
+                        <div class="text-amber-400 text-[10px] font-bold mb-2 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                            CLAUDE DESKTOP (APP)
+                        </div>
+                        <div class="text-xs bg-slate-800 p-3 rounded-lg border border-slate-700">
+                            <span class="text-slate-400">Win:</span> %APPDATA%\Claude\<br>
+                            <span class="text-slate-400">Mac:</span> ~/Library/Application Support/Claude/<br>
+                            <span class="text-white font-bold underline">claude_desktop_config.json</span>
                         </div>
                     </div>
                     <div>
-                        <h3 class="font-bold text-blue-700 mb-3 flex items-center">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
-                            Claude Code (CLI / VS Code)
-                        </h3>
-                        <div class="path-box p-3 rounded-lg text-xs leading-relaxed">
-                            ~\ (User Home)<br>
-                            ├── <span class="text-blue-400">.claude.json</span> (MCP & 프로젝트 설정)<br>
-                            └── .claude\<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;├── settings.json (Bash 권한)<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;└── skills\ (설치된 스킬)
+                        <div class="text-blue-400 text-[10px] font-bold mb-2 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                            CLAUDE CODE (CLI / VSCODE)
                         </div>
+                        <div class="text-xs bg-slate-800 p-3 rounded-lg border border-slate-700">
+                            <span class="text-slate-400">Home:</span> ~/<br>
+                            <span class="text-white font-bold underline">.claude.json</span><br>
+                            <span class="text-slate-400">Project:</span> [Root]/<span class="text-white">.mcp.json</span>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-red-400 font-bold bg-red-950/50 p-2 rounded border border-red-900">
+                        주의: 두 파일은 절대 공유되지 않습니다! 각각 설정해야 함.
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <!-- 3. 기능 상세 및 스킬 사용법 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <section class="section-card p-6">
+                <h2 class="text-xl font-bold mb-4">4. 제품별 상세 요약</h2>
+                <div class="space-y-4 text-sm">
+                    <div class="border-l-4 border-slate-200 pl-4">
+                        <div class="font-bold">Claude.ai 웹 / 데스크탑 채팅</div>
+                        <p class="text-xs text-slate-500">일반 채팅형 서비스. 로컬 설정 없음. 웹 MCP는 원격 HTTP 전용.</p>
+                    </div>
+                    <div class="border-l-4 border-amber-400 pl-4">
+                        <div class="font-bold">데스크탑 Cowork 모드</div>
+                        <p class="text-xs text-slate-500">로컬 파일/앱 접근 에이전트. 설정: <code class="bg-amber-50">claude_desktop_config.json</code></p>
+                    </div>
+                    <div class="border-l-4 border-blue-400 pl-4">
+                        <div class="font-bold">Claude Code (CLI & VS Code)</div>
+                        <p class="text-xs text-slate-500">개발 특화. CLI와 확장은 <code class="bg-blue-50">~/.claude.json</code>을 완벽 공유함.</p>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- Tab: MCP -->
-            <div id="tab-mcp" class="p-6 hidden">
+            <section class="section-card p-6">
+                <h2 class="text-xl font-bold mb-4">5. 사용법 및 설치</h2>
                 <div class="space-y-4">
-                    <div class="flex items-start gap-4 p-4 border rounded-xl bg-stone-50">
-                        <div class="bg-amber-100 p-2 rounded-lg text-amber-600 font-bold">Desktop</div>
-                        <div>
-                            <div class="font-semibold">데스크탑 앱 MCP</div>
-                            <div class="text-xs text-stone-500 mt-1">config.json 파일에 직접 JSON 형태로 서버 등록</div>
-                        </div>
+                    <div>
+                        <div class="text-xs font-bold text-slate-400 mb-2">스킬 호출 (공통)</div>
+                        <div class="terminal-code">/xlsx 이 데이터를 스프레드시트로</div>
                     </div>
-                    <div class="flex items-start gap-4 p-4 border rounded-xl bg-blue-50">
-                        <div class="bg-blue-100 p-2 rounded-lg text-blue-600 font-bold">Code</div>
-                        <div>
-                            <div class="font-semibold">Claude Code MCP (CLI 중심)</div>
-                            <div class="text-xs text-blue-600 font-mono mt-1">claude mcp add --scope user ...</div>
-                            <div class="flex gap-2 mt-2">
-                                <span class="text-[10px] bg-white border border-blue-200 px-1 rounded">user: 전역</span>
-                                <span class="text-[10px] bg-white border border-blue-200 px-1 rounded">local: 현재프로젝트(개인)</span>
-                                <span class="text-[10px] bg-white border border-blue-200 px-1 rounded">project: 공유(.mcp.json)</span>
-                            </div>
-                        </div>
+                    <div>
+                        <div class="text-xs font-bold text-slate-400 mb-2">스킬 설치 (Claude Code CLI)</div>
+                        <div class="terminal-code">npx @smithery/cli@latest skill add [스킬] --agent claude-code</div>
                     </div>
-                    <div class="flex items-start gap-4 p-4 border rounded-xl bg-green-50">
-                        <div class="bg-green-100 p-2 rounded-lg text-green-600 font-bold">Web</div>
-                        <div>
-                            <div class="font-semibold">Claude.ai 웹 MCP</div>
-                            <div class="text-xs text-stone-500 mt-1">설정 → Integrations 메뉴에서 <span class="font-bold text-red-600 underline">원격 HTTP URL</span>만 가능</div>
-                        </div>
+                    <div>
+                        <div class="text-xs font-bold text-slate-400 mb-2">CLI MCP Scope 추가</div>
+                        <div class="terminal-code">claude mcp add --transport http --scope user [Name] [URL]</div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Tab: Sharing -->
-            <div id="tab-sharing" class="p-6 hidden text-center">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="p-4 bg-stone-50 rounded-xl border">
-                        <div class="text-xs text-stone-400 mb-2">웹 ↔ 데스크탑</div>
-                        <div class="font-bold text-red-500">❌ 공유 안 함</div>
-                        <div class="text-[10px] text-stone-400 mt-1">별개 환경</div>
-                    </div>
-                    <div class="p-4 bg-stone-50 rounded-xl border">
-                        <div class="text-xs text-stone-400 mb-2">데스크탑 ↔ Claude Code</div>
-                        <div class="font-bold text-red-500">❌ 공유 안 함</div>
-                        <div class="text-[10px] text-stone-400 mt-1">설정 파일 위치 다름</div>
-                    </div>
-                    <div class="p-4 bg-blue-50 rounded-xl border-2 border-blue-200">
-                        <div class="text-xs text-blue-400 mb-2">CLI ↔ VS Code 확장</div>
-                        <div class="font-bold text-blue-600">✅ 완벽 공유</div>
-                        <div class="text-[10px] text-blue-400 mt-1">~/.claude.json 동일 사용</div>
-                    </div>
-                </div>
-            </div>
+            </section>
         </div>
 
-        <!-- FAQ Quick Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="card bg-white p-5 rounded-2xl border border-stone-200 flex gap-4">
-                <div class="text-3xl">💡</div>
-                <div>
-                    <h4 class="font-bold text-stone-800">설정 파일이 왜 두개인가요?</h4>
-                    <p class="text-xs text-stone-500 mt-1 leading-relaxed">
-                        <span class="font-semibold text-blue-600">.claude.json</span>은 MCP 같은 도구 설정이며,<br>
-                        <span class="font-semibold text-amber-600">.claude/settings.json</span>은 명령어 실행 권한 같은 보안 설정입니다.
+        <!-- 4. 공유 여부 명확화 (최종본 핵심) -->
+        <section class="section-card p-6 mb-8 bg-slate-50 border-2 border-slate-200">
+            <h2 class="text-xl font-bold mb-6 text-center">6. 데이터 공유 여부 (Summary)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-4 rounded-xl border flex flex-col items-center justify-center gap-2">
+                    <div class="text-xs text-slate-400">웹 ↔ 데스크탑</div>
+                    <div class="text-red-500 font-bold text-lg">❌ 공유 안 함</div>
+                </div>
+                <div class="bg-white p-4 rounded-xl border-2 border-red-200 flex flex-col items-center justify-center gap-2">
+                    <div class="text-xs text-slate-400">데스크탑 ↔ Claude Code</div>
+                    <div class="text-red-500 font-bold text-lg">❌ 완전 별개 파일</div>
+                    <p class="text-[10px] text-center text-slate-400">설정 파일 경로 자체가 다름</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border-2 border-blue-500 flex flex-col items-center justify-center gap-2 shadow-md">
+                    <div class="text-xs text-blue-400">CLI ↔ VS Code 확장</div>
+                    <div class="text-blue-600 font-bold text-lg">✅ 설정 공유</div>
+                    <p class="text-[10px] text-center text-blue-400">~/.claude.json 공동 사용</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. FAQ 및 결론 -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="section-card p-6">
+                <h3 class="font-bold text-lg mb-4">💡 FAQ</h3>
+                <ul class="space-y-4 text-xs leading-relaxed">
+                    <li>
+                        <span class="font-bold text-slate-900 block">Q. Claude Desktop과 Code의 MCP는 공유되나요?</span>
+                        <span class="text-red-600 font-bold">절대 아닙니다.</span> 각각 별도의 설정 파일에 등록해야 합니다.
+                    </li>
+                    <li>
+                        <span class="font-bold text-slate-900 block">Q. CLAUDE.md는 어디에 두나요?</span>
+                        - 전역: <code class="bg-slate-100">~/.claude/CLAUDE.md</code><br>
+                        - 프로젝트: <code class="bg-slate-100">[프로젝트]/CLAUDE.md</code>
+                    </li>
+                    <li>
+                        <span class="font-bold text-slate-900 block">Q. Cowork 에러 발생 시?</span>
+                        <code class="bg-slate-100">Claude-재시작.ps1</code>을 실행하여 서비스를 재설정하세요.
+                    </li>
+                </ul>
+            </div>
+            <div class="section-card p-6 bg-slate-900 text-slate-300">
+                <h3 class="text-white font-bold text-lg mb-4">🎯 핵심 요약</h3>
+                <div class="space-y-3 text-xs">
+                    <p>• <span class="text-amber-400 font-bold">Desktop MCP:</span> claude_desktop_config.json</p>
+                    <p>• <span class="text-blue-400 font-bold">Claude Code MCP:</span> ~/.claude.json (+ .mcp.json)</p>
+                    <p>• <span class="text-white font-bold">CLI ↔ VS Code 확장:</span> 같은 설정을 공유하는 한 몸입니다.</p>
+                    <p class="mt-4 pt-4 border-t border-slate-700 text-slate-500">
+                        웹 MCP는 원격 HTTP만 지원하며, 로컬 환경(stdio)은 데스크탑 앱이나 Claude Code를 통해서만 가능합니다.
                     </p>
                 </div>
             </div>
-            <div class="card bg-white p-5 rounded-2xl border border-stone-200 flex gap-4">
-                <div class="text-3xl">⚠️</div>
-                <div>
-                    <h4 class="font-bold text-stone-800">웹에서 로컬 MCP가 안 돼요!</h4>
-                    <p class="text-xs text-stone-500 mt-1 leading-relaxed">
-                        Claude.ai 웹은 샌드박스 환경이라 로컬 터미널(stdio) 방식의 MCP는 지원하지 않습니다. 오직 외부에서 접근 가능한 HTTP 서버 방식만 연결 가능합니다.
-                    </p>
-                </div>
-            </div>
-        </div>
+        </section>
 
-        <!-- Footer Note -->
-        <footer class="mt-10 pb-10 border-t pt-6 text-center text-stone-400 text-xs">
-            Anthropic Claude Product Structure Visualization &copy; 2026<br>
-            이 가이드는 실시간 제품 업데이트에 따라 변경될 수 있습니다.
+        <footer class="mt-12 text-center text-slate-400 text-[10px] pb-10">
+            &copy; 2026 Claude Ecosystem Guide. 최신 업데이트 내용을 기반으로 작성되었습니다.
         </footer>
     </div>
-
-    <script>
-        function showTab(tabName) {
-            // Hide all tabs
-            document.getElementById('tab-comparison').classList.add('hidden');
-            document.getElementById('tab-storage').classList.add('hidden');
-            document.getElementById('tab-mcp').classList.add('hidden');
-            document.getElementById('tab-sharing').classList.add('hidden');
-            
-            // Deactivate all buttons
-            document.getElementById('btn-comparison').classList.remove('tab-active');
-            document.getElementById('btn-comparison').classList.add('text-stone-500');
-            document.getElementById('btn-storage').classList.remove('tab-active');
-            document.getElementById('btn-storage').classList.add('text-stone-500');
-            document.getElementById('btn-mcp').classList.remove('tab-active');
-            document.getElementById('btn-mcp').classList.add('text-stone-500');
-            document.getElementById('btn-sharing').classList.remove('tab-active');
-            document.getElementById('btn-sharing').classList.add('text-stone-500');
-
-            // Show current tab
-            document.getElementById('tab-' + tabName).classList.remove('hidden');
-            
-            // Activate current button
-            document.getElementById('btn-' + tabName).classList.add('tab-active');
-            document.getElementById('btn-' + tabName).classList.remove('text-stone-500');
-        }
-    </script>
 </body>
 </html>
